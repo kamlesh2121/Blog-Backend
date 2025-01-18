@@ -37,7 +37,7 @@ export const register = async (req, res) => {
       photo.tempFilePath
     );
     if (!cloudinaryResponse || cloudinaryResponse.error) {
-      console.log(cloudinaryResponse.error);
+      return res.status(500).send(cloudinaryResponse.error);
     }
     const hashedPassword = await bcrypt.hash(password, 10);
     const newUser = new User({
@@ -55,7 +55,6 @@ export const register = async (req, res) => {
     await newUser.save();
     if (newUser) {
       let token = await createTokenAndSaveCookies(newUser._id, res);
-      // console.log("Singup: ", token);
       res.status(201).json({
         message: "User registered successfully",
         user: {
@@ -82,7 +81,6 @@ export const login = async (req, res) => {
       return res.status(400).json({ message: "Please fill required fields" });
     }
     const user = await User.findOne({ email }).select("+password");
-    // console.log(user);
     if (!user.password) {
       return res.status(400).json({ message: "User password is missing" });
     }
@@ -95,7 +93,6 @@ export const login = async (req, res) => {
       return res.status(400).json({ message: `Given role ${role} not found` });
     }
     let token = await createTokenAndSaveCookies(user._id, res);
-    // console.log("Login: ", token);
     res.status(200).json({
       message: "User logged in successfully",
       user: {
@@ -113,7 +110,12 @@ export const login = async (req, res) => {
 
 export const logout = (req, res) => {
   try {
-    res.clearCookie("jwt");
+    res.clearCookie("jwt",{
+      httpOnly: true,
+      secure: true,
+      sameSite: "none"
+    });
+
     res.status(200).json({ message: "User logged out successfully" });
   } catch (error) {
     return res.status(500).json({ error: "Internal Server error" });

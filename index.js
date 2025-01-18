@@ -12,7 +12,6 @@ const app = express();
 dotenv.config();
 const port= process.env.PORT;
 const MONGO_URI = process.env.MONGO_URI;
-const FRONTEND_URL = process.env.FRONTEND_URL;
 
 // middleware
 app.use(express.json());
