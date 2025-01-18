@@ -18,7 +18,7 @@ const FRONTEND_URL = process.env.FRONTEND_URL;
 app.use(express.json());
 app.use(cookieParser())
 app.use(cors({
-    origin:"http://localhost:5173", // Frontend URL
+    origin:"https://blog-frontend-ten-iota.vercel.app", // Frontend URL
     credentials:true, // Allow sending cookies
     methods:['GET','POST','PUT','DELETE']
 }))
