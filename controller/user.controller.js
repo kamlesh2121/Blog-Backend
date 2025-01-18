@@ -37,7 +37,7 @@ export const register = async (req, res) => {
       photo.tempFilePath
     );
     if (!cloudinaryResponse || cloudinaryResponse.error) {
-      return res.status(500).send(cloudinaryResponse.error);
+      return res.status(500).send("Cloudinary error",cloudinaryResponse.error);
     }
     const hashedPassword = await bcrypt.hash(password, 10);
     const newUser = new User({
